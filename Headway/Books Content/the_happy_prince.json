@@ -1,0 +1,48 @@
+{
+  "title": "The Happy Prince and Other Tales",
+  "author": "Oscar Wilde",
+  "published_in": 1888,
+  "cover_file_name": "happy_prince_cover.jpg",
+  "chapters": [
+    {
+      "chapter_number": 1,
+      "title": "The Happy Prince",
+      "key_point": "True compassion often requires personal sacrifice",
+      "audio_file_name": "01_happy_prince.mp3",
+      "duration": 71.84,
+      "content": "In this story, a magnificent statue of a prince stands overlooking a city. Once oblivious to the hardships of his people during his lifetime, the Happy Prince, now a statue adorned with gold leaf and precious gems, becomes aware of the widespread suffering around him. Moved by compassion, he enlists the help of a kind swallow to distribute his riches to the needy. The swallow, initially hesitant due to his impending migration to Egypt, agrees to assist. Together, they give away the prince’s ruby, sapphires, and gold leaf to alleviate the suffering of the poor. As winter approaches, the swallow grows weak from the cold but continues to aid the prince in his mission. Eventually, the swallow dies from the harsh conditions, and the prince’s leaden heart breaks in sorrow. The townspeople, unaware of their sacrifices, deem the now dull statue useless and melt it down, discarding the lead heart and the swallow’s body. However, in the afterlife, these two are recognized as the most precious beings in the city and are granted eternal happiness."
+    },
+    {
+      "chapter_number": 2,
+      "title": "The Nightingale and the Rose",
+      "key_point": "The purity of selfless love may go unrecognized by a cynical world",
+      "audio_file_name": "02_nightingale_rose.mp3",
+      "duration": 66.17,
+      "content": "A young student is heartbroken because he lacks a red rose to present to his beloved, who has promised to dance with him if he brings her one. A nightingale, overhearing his lament, decides to help him, believing in the power of true love. She approaches various rose trees, seeking a red rose, but finds none. Finally, one rose tree tells her that she can create a red rose by singing all night with her heart pressed against a thorn, staining the rose with her blood. The nightingale makes the ultimate sacrifice, impaling herself on a thorn and singing passionately throughout the night, creating a beautiful red rose. The student discovers the rose and joyfully presents it to his beloved. However, she dismisses the gift, preferring jewels offered by another suitor, and the student, disillusioned, discards the rose and abandons his pursuit of love, turning to his books instead. The nightingale’s selfless act goes unappreciated, highlighting the often unrecognized nature of true sacrifice."
+    },
+    {
+      "chapter_number": 3,
+      "title": "The Selfish Giant",
+      "key_point": "Embracing kindness can transform one’s life and environment",
+      "audio_file_name": "03_selfish_giant.mp3",
+      "duration": 67.19,
+      "content": "A giant returns home after a long absence to find children playing in his beautiful garden. Annoyed by their presence, he builds a high wall to keep them out and posts a sign warning trespassers. As a result, his garden falls into perpetual winter, with no signs of spring. One day, the giant awakens to the sound of a linnet singing and discovers that the children have found a way back into his garden, bringing spring with them. He notices a small boy struggling to climb a tree and, moved by compassion, helps him. Realizing his selfishness, the giant knocks down the wall and welcomes the children, allowing them to play freely. The garden flourishes, but the little boy he helped does not return. Years later, the giant, now old and feeble, sees the boy again under a beautiful white tree. The boy bears wounds on his hands and feet, and when the giant expresses concern, the boy reveals that these are the wounds of love and invites the giant to his garden, which is paradise. The giant dies peacefully, his body found covered in blossoms, symbolizing his redemption through kindness."
+    },
+    {
+      "chapter_number": 4,
+      "title": "The Devoted Friend",
+      "key_point": "True friendship is reciprocal and not exploitative",
+      "audio_file_name": "04_devoted_friend.mp3",
+      "duration": 58.28,
+      "content": "This story, told by a linnet to a water-rat, centers on the relationship between a wealthy miller named Hugh and a poor gardener named Hans. The miller professes to be Hans’s devoted friend but continually takes advantage of Hans’s generosity. He promises Hans his old, broken wheelbarrow but demands numerous favors in return, keeping Hans so busy that he cannot tend to his own garden. One stormy night, the miller asks Hans to fetch a doctor for his sick son. Despite the dangerous weather, Hans agrees but gets lost and drowns in a deep puddle. At Hans’s funeral, the miller laments the loss of his friend, not for Hans’s sake, but because he had as good as given him his wheelbarrow and now has no one to do favors for him. The story concludes with the water-rat dismissing the tale, unable to see its moral about the dangers of one-sided friendships and the exploitation of kindness."
+    },
+    {
+      "chapter_number": 5,
+      "title": "The Remarkable Rocket",
+      "key_point": "Excessive vanity can lead to one’s downfall and obscurity",
+      "audio_file_name": "05_remarkable_rocket.mp3",
+      "duration": 56.50,
+      "content": "A grand fireworks display is planned for the wedding of a prince and princess. Among the fireworks is a self-important rocket who believes he is destined for greatness and constantly boasts about his superiority. He looks down upon the other fireworks and, in his arrogance, becomes so emotional that he dampens himself with his own tears. When the time comes for the display, the rocket fails to ignite due to his dampness and is discarded into a ditch. Even then, he maintains his delusions of grandeur, dismissing the creatures he encounters and believing he is still destined for a magnificent fate. Eventually, two boys find him and use him as fuel for their campfire. The rocket finally ignites and explodes, but there is no audience to witness his display, and his existence ends in obscurity. This tale serves as a cautionary story about the perils of excessive pride and self-absorption."
+    }
+  ]
+}
