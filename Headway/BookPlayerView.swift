@@ -4,6 +4,8 @@ import SwiftUI
 struct BookPlayerView: View {
     @Bindable var store: StoreOf<BookPlayerFeature>
 
+    @State private var localSliderValue: Double? = nil
+
     var body: some View {
         NavigationView {
             if store.isLoading {
@@ -59,8 +61,17 @@ struct BookPlayerView: View {
                     .frame(width: 44)
 
                 Slider(
-                    value: $store.playbackProgress.sending(\.seek),
-                    in: 0 ... 1
+                    value: Binding(
+                        get: { localSliderValue ?? store.playbackProgress },
+                        set: { localSliderValue = $0 }
+                    ),
+                    in: 0 ... 1,
+                    onEditingChanged: { editing in
+                        if !editing, let finalValue = localSliderValue {
+                            store.send(.seek(finalValue))
+                            localSliderValue = nil
+                        }
+                    }
                 )
                 .accentColor(.blue)
 

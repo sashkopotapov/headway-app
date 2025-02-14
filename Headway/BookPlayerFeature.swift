@@ -100,9 +100,19 @@ struct BookPlayerFeature {
                 }
 
             case .fastForward:
+                if state.duration > 0 {
+                    let currentTime = state.playbackProgress * state.duration
+                    let newTime = min(currentTime + 10, state.duration)
+                    state.playbackProgress = newTime / state.duration
+                }
                 return runPlayerTask { try await self.playerClient.fastForward(10) }
 
             case .rewind:
+                if state.duration > 0 {
+                    let currentTime = state.playbackProgress * state.duration
+                    let newTime = max(currentTime - 5, 0)
+                    state.playbackProgress = newTime / state.duration
+                }
                 return runPlayerTask { try await self.playerClient.rewind(5) }
 
             case let .changeSpeed(speed):
