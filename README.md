@@ -39,6 +39,7 @@ This is a take-home task for **Headway**—a simple audiobook player built with 
 - **AVPlayer Exploration:** Further exploration of `AVPlayer` might reveal benefits in terms of playback handling.
 - **Adaptive Progress Interval:** Adjust the progress notification interval (e.g., 1 second divided by the current playback speed) when the playback speed changes.
 - **Reliable Chapter-End Detection:** Instead of using progress/tolerance-based checks, leveraging `AVAudioPlayer`’s `audioPlayerDidFinishPlaying(_:successfully:)` could provide a more robust solution for detecting chapter completion.
+- **Improved Slider Interaction:** Consider pausing slider binding while the user is interacting with it and sending the final value once the interaction is finished. This approach could lead to smoother, more deliberate control.
 
 ---
 
