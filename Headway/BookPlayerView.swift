@@ -9,17 +9,20 @@ struct BookPlayerView: View {
             if store.isLoading {
                 ProgressView("Loading Book…")
             } else if let book = store.book {
-                VStack(spacing: 32) {
+                VStack(spacing: 48) {
                     playerImage(for: book)
+
                     keyPointView(for: book)
                         .padding(.horizontal)
-                    progressView(for: book)
-                    speedButton
+
+                    progressView
+
                     controlButtons
+
                     Spacer()
                 }
                 .padding(.horizontal)
-                .background(Color(.systemBackground))
+                .background(Color(.secondarySystemBackground))
             }
         }
         .alert($store.scope(state: \.alert, action: \.alert))
@@ -30,52 +33,54 @@ struct BookPlayerView: View {
         Image(resource: book.coverFileName)?
             .resizable()
             .scaledToFit()
-            .frame(width: 250)
+            .frame(width: 220)
             .cornerRadius(10)
     }
 
     private func keyPointView(for book: Book) -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             Text("KEY POINT \(store.selectedChapterIndex + 1) OF \(book.chapters.count)")
-                .font(.system(size: 14, weight: .semibold))
+                .font(.footnote)
                 .foregroundColor(.gray)
+
             Text(book.chapters[store.selectedChapterIndex].keyPoint)
-                .font(.system(size: 16))
+                .font(.callout)
                 .multilineTextAlignment(.center)
         }
+        .foregroundStyle(Color.primary)
     }
 
     private var progressView: some View {
-        HStack(alignment: .center) {
-            Text(formatTime(store.playbackProgress * store.duration))
-                .font(.system(size: 12))
-                .foregroundColor(.gray)
-                .frame(width: 44)
+        VStack(spacing: 16) {
+            HStack(alignment: .center) {
+                Text(formatTime(store.playbackProgress * store.duration))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(width: 44)
 
-            Slider(
-                value: $store.playbackProgress.sending(\.seek),
-                in: 0 ... 1
-            )
-            .accentColor(.blue)
+                Slider(
+                    value: $store.playbackProgress.sending(\.seek),
+                    in: 0 ... 1
+                )
+                .accentColor(.blue)
 
-            Text(formatTime(store.duration))
-                .font(.system(size: 12))
-                .foregroundColor(.gray)
-                .frame(width: 44)
-        }
-    }
+                Text(formatTime(store.duration))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(width: 44)
+            }
 
-    private var speedButton: some View {
-        Button(action: {
-            let newSpeed = store.playbackSpeed == 1.0 ? 1.5 : 1.0
-            store.send(.changeSpeed(newSpeed))
-        }) {
-            Text("Speed x\(String(format: "%.1f", store.playbackSpeed))")
-                .font(.system(size: 14, weight: .medium))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(8)
+            Button(action: {
+                let newSpeed = store.playbackSpeed == 1.0 ? 1.5 : 1.0
+                store.send(.changeSpeed(newSpeed))
+            }) {
+                Text("\(String(format: "%.1f", store.playbackSpeed))x speed")
+                    .font(.footnote)
+                    .foregroundStyle(Color.primary)
+                    .padding(8)
+                    .background(Color(.tertiarySystemBackground))
+                    .cornerRadius(8)
+            }
         }
     }
 
@@ -106,6 +111,7 @@ struct BookPlayerView: View {
                     .font(.system(size: 24))
             }
         }
+        .foregroundStyle(Color.primary)
     }
 
     private func formatTime(_ time: TimeInterval) -> String {
