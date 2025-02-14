@@ -5,7 +5,7 @@ import Foundation
 struct BookPlayerFeature {
     @ObservableState
     struct State: Equatable {
-        var book: Book? = nil
+        var book: Book?
         var isLoading = false
 
         var selectedChapterIndex = 0
@@ -32,7 +32,7 @@ struct BookPlayerFeature {
         case chapterFinished
 
         case playerErrored(String)
-        
+
         case alert(PresentationAction<Alert>)
 
         enum Alert: Equatable {
@@ -41,9 +41,7 @@ struct BookPlayerFeature {
         }
     }
 
-    private enum CancelID {
-        case progress
-    }
+    private enum CancelID { case progress }
 
     @Dependency(\.playerClient) var playerClient
     @Dependency(\.parserClient) var parserClient
@@ -56,7 +54,8 @@ struct BookPlayerFeature {
                 state.isLoading = true
                 return .run { send in
                     do {
-                        let book = try await self.parserClient.loadBook("the_happy_prince")
+                        let book = try await self.parserClient
+                            .loadBook(BookResource.happyPrince.rawValue)
                         await send(.bookLoaded(.success(book)))
                     } catch {
                         await send(.bookLoaded(.failure(error)))
@@ -65,23 +64,13 @@ struct BookPlayerFeature {
 
             case let .bookLoaded(.success(book)):
                 state.book = book
-                if let chapter = book.chapters[safe: state.selectedChapterIndex] {
-                    state.duration = chapter.duration
-                }
+                state.duration = book.chapters[safe: state.selectedChapterIndex]?.duration ?? 0
                 state.isLoading = false
                 return .none
 
             case let .bookLoaded(.failure(error)):
                 state.isLoading = false
-                state.alert = AlertState {
-                    TextState("Something went wrong!")
-                } actions: {
-                    ButtonState(role: .cancel, action: .dismiss) {
-                        TextState("OK")
-                    }
-                } message: {
-                    TextState(error.localizedDescription)
-                }
+                state.alert = Self.makeAlert(message: error.localizedDescription)
                 return .none
 
             case .playPauseTapped:
@@ -102,11 +91,9 @@ struct BookPlayerFeature {
                         )
                     } else {
                         guard let chapter = book.chapters[safe: state.selectedChapterIndex]
-                        else {
-                            return .none
-                        }
+                        else { return .none }
                         return .merge(
-                            playChapter(chapter, speed: state.playbackSpeed),
+                            playChapter(chapter, speed: speed),
                             startProgressLoop()
                         )
                     }
@@ -124,29 +111,27 @@ struct BookPlayerFeature {
 
             case .selectPreviousChapter:
                 guard let book = state.book else { return .none }
-                let idx = max(0, state.selectedChapterIndex - 1)
-                return updateChapter(state: &state, newIndex: idx, in: book)
+                let newIndex = max(0, state.selectedChapterIndex - 1)
+                return updateChapter(state: &state, newIndex: newIndex, in: book)
 
             case .selectNexChapter:
                 guard let book = state.book else { return .none }
-                let idx = min(state.selectedChapterIndex + 1, book.chapters.count - 1)
-                return updateChapter(state: &state, newIndex: idx, in: book)
+                let newIndex = min(state.selectedChapterIndex + 1, book.chapters.count - 1)
+                return updateChapter(state: &state, newIndex: newIndex, in: book)
 
             case let .seek(progress):
                 state.playbackProgress = progress
                 return runPlayerTask { try await self.playerClient.seek(progress) }
 
             case let .updateProgress(currentTime):
-                if state.duration > 0 {
-                    let newProgress = currentTime / state.duration
-                    let tolerance = 0.01
-                    if newProgress >= (1.0 - tolerance) {
-                        return .send(.chapterFinished)
-                    } else {
-                        state.playbackProgress = newProgress
-                    }
+                guard state.duration > 0 else { return .none }
+                let newProgress = currentTime / state.duration
+                if newProgress >= (1.0 - 0.01) {
+                    return .send(.chapterFinished)
+                } else {
+                    state.playbackProgress = newProgress
+                    return .none
                 }
-                return .none
 
             case .chapterFinished:
                 guard let book = state.book, !book.chapters.isEmpty else { return .none }
@@ -154,17 +139,9 @@ struct BookPlayerFeature {
                 return updateChapter(state: &state, newIndex: nextIndex, in: book)
 
             case let .playerErrored(message):
-                state.alert = AlertState {
-                    TextState("Something went wrong!")
-                } actions: {
-                    ButtonState(role: .cancel, action: .dismiss) {
-                        TextState("OK")
-                    }
-                } message: {
-                    TextState(message)
-                }
+                state.alert = Self.makeAlert(message: message)
                 return .none
-                
+
             case .alert(.presented(.dismiss)):
                 state.alert = nil
                 return .none
@@ -175,10 +152,21 @@ struct BookPlayerFeature {
         }
         .ifLet(\.$alert, action: \.alert)
     }
+
+    private static func makeAlert(message: String) -> AlertState<Action.Alert> {
+        AlertState {
+            TextState("Something went wrong!")
+        } actions: {
+            ButtonState(role: .cancel, action: .dismiss) {
+                TextState("OK")
+            }
+        } message: {
+            TextState(message)
+        }
+    }
 }
 
 private extension BookPlayerFeature {
-    /// Runs a player client task and sends an error alert if it fails.
     func runPlayerTask(_ task: @Sendable @escaping () async throws -> Void) -> Effect<Action> {
         .run { send in
             do {
@@ -189,7 +177,6 @@ private extension BookPlayerFeature {
         }
     }
 
-    /// Starts a loop that updates playback progress every second.
     func startProgressLoop() -> Effect<Action> {
         .run { send in
             while !Task.isCancelled {
@@ -201,13 +188,10 @@ private extension BookPlayerFeature {
         .cancellable(id: CancelID.progress, cancelInFlight: true)
     }
 
-    /// Plays the given chapter at the specified speed.
     func playChapter(_ chapter: Chapter, speed: Double) -> Effect<Action> {
         runPlayerTask { try await self.playerClient.play(chapter.audioFileName, speed) }
     }
 
-    /// Updates the state to use the chapter at the given index and, if playing,
-    /// starts playback of that chapter.
     func updateChapter(state: inout State, newIndex: Int, in book: Book) -> Effect<Action> {
         guard let chapter = book.chapters[safe: newIndex] else { return .none }
         state.selectedChapterIndex = newIndex

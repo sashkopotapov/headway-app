@@ -9,21 +9,13 @@ struct BookPlayerView: View {
             if store.isLoading {
                 ProgressView("Loading Book…")
             } else if let book = store.book {
-                VStack(alignment: .center, spacing: 32) {
-                    playerImage(book: book)
-
-                    keyPointView(
-                        book: book,
-                        selectedIndex: store.selectedChapterIndex
-                    )
-                    .padding(.horizontal)
-
-                    progressView
-
+                VStack(spacing: 32) {
+                    playerImage(for: book)
+                    keyPointView(for: book)
+                        .padding(.horizontal)
+                    progressView(for: book)
                     speedButton
-
                     controlButtons
-
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -31,27 +23,22 @@ struct BookPlayerView: View {
             }
         }
         .alert($store.scope(state: \.alert, action: \.alert))
-        .onAppear {
-            store.send(.loadBook)
-        }
+        .onAppear { store.send(.loadBook) }
     }
 
-    private func playerImage(book: Book) -> some View {
-        Image(resource: book.coverFileName)
+    private func playerImage(for book: Book) -> some View {
+        Image(resource: book.coverFileName)?
             .resizable()
             .scaledToFit()
             .frame(width: 250)
             .cornerRadius(10)
     }
 
-    private func keyPointView(book: Book, selectedIndex _: Int) -> some View {
-        VStack(alignment: .center, spacing: 16) {
-            Text(
-                "KEY POINT \(store.selectedChapterIndex + 1) OF \(book.chapters.count)"
-            )
-            .font(.system(size: 14, weight: .semibold))
-            .foregroundColor(.gray)
-
+    private func keyPointView(for book: Book) -> some View {
+        VStack(spacing: 16) {
+            Text("KEY POINT \(store.selectedChapterIndex + 1) OF \(book.chapters.count)")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.gray)
             Text(book.chapters[store.selectedChapterIndex].keyPoint)
                 .font(.system(size: 16))
                 .multilineTextAlignment(.center)
@@ -121,7 +108,6 @@ struct BookPlayerView: View {
         }
     }
 
-    /// Helper method to format a time interval (in seconds) as mm:ss.
     private func formatTime(_ time: TimeInterval) -> String {
         let minutes = Int(time) / 60
         let seconds = Int(time) % 60
@@ -130,21 +116,21 @@ struct BookPlayerView: View {
 }
 
 extension Image {
-    init(resource name: String) {
-        guard let path = Bundle.main.path(forResource: name, ofType: ""),
-              let uiImage = UIImage(contentsOfFile: path)
-        else {
-            self.init(systemName: "book")
-            return
+    init?(resource name: String) {
+        if let path = Bundle.main.path(forResource: name, ofType: ""),
+           let uiImage = UIImage(contentsOfFile: path)
+        {
+            self.init(uiImage: uiImage)
+        } else {
+            self.init(systemName: "book.pages")
         }
-        self.init(uiImage: uiImage)
     }
 }
 
 #Preview {
     BookPlayerView(
-        store: Store(
-            initialState: BookPlayerFeature.State()
-        ) { BookPlayerFeature() }
+        store: Store(initialState: BookPlayerFeature.State()) {
+            BookPlayerFeature()
+        }
     )
 }
