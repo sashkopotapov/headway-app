@@ -1,0 +1,12 @@
+--disable hoistAwait,hoistTry,preferForLoop 
+--enable wrapLoopBodies,wrapMultilineConditionalAssignment
+--decimalgrouping 3,5
+--exclude Packages/Shareup/Sources/UIKitResources/Emoji+UIKitResources.swift
+--funcattributes prev-line
+--minversion 0.47.2
+--maxwidth 96
+--typeattributes prev-line
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+
